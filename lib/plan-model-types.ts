@@ -37,6 +37,7 @@ export type AdminModel = {
   credits: number;
   enabled: boolean;
   sortOrder: number;
+  supportsImageToImage: boolean;
 };
 
 /**
@@ -45,7 +46,7 @@ export type AdminModel = {
  * provider 与 upstreamModel 不可改：generations 行按 id 引用模型，改掉上游模型会让
  * 事后对账把两批不同的结果混成同一个模型的。要换上游就新建一行、把旧行下架。
  */
-export const EDITABLE_MODEL_KEYS = ["displayName", "credits", "enabled", "sortOrder"] as const;
+export const EDITABLE_MODEL_KEYS = ["displayName", "credits", "enabled", "sortOrder", "supportsImageToImage"] as const;
 
 /** 后端拒绝的扣费下限，与 internal/handler/admin_models.go 的 minModelCredits 一致。 */
 export const MIN_MODEL_CREDITS = 1;

@@ -86,7 +86,7 @@
     "model": "Model",
     "modelOption": "{name} · {credits, plural, one {# credit} other {# credits}}",
     "aspectRatio": "Aspect ratio",
-    "reference": "Reference image (optional)",
+    "reference": "Reference images",
     "noImageToImage": "This model doesn't support image-to-image",
     "promptLabel": "Prompt",
     "promptPlaceholder": "Describe the image you want…",
@@ -100,7 +100,17 @@
     "failed": "Generation failed: {error}. {credits, plural, one {# credit} other {# credits}} refunded.",
     "timeout": "Generation timed out. Credits may already have been charged — please check your history in a moment.",
     "networkError": "Network error. Please try again.",
-    "genericError": "Something went wrong"
+    "genericError": "Something went wrong",
+    "referenceCount": "{count}/{max}",
+    "referenceAdd": "Add images",
+    "referenceRemove": "Remove this image",
+    "referenceRetry": "Retry upload",
+    "referenceFull": "Limit reached",
+    "referenceHint": "Optional. Up to {max} images. They're resized in your browser, and transparency becomes white.",
+    "referenceUnavailable": "Reference images aren't available on this deployment.",
+    "referenceTooMany": "You can add at most {max} reference images.",
+    "referenceUnsupportedType": "{count, plural, =1 {1 file was skipped} other {# files were skipped}} — only PNG, JPEG and WebP can be used.",
+    "referenceUploadFailed": "{count, plural, =1 {1 image didn't upload} other {# images didn't upload}}. Generating will use only the ones that succeeded."
   },
   "InsufficientCredits": {
     "title": "Out of credits",
@@ -146,7 +156,9 @@
     "notCharged": "No credits were charged.",
     "temporaryLink": "This link may have expired.",
     "openImage": "Open full size",
-    "creditsSpent": "{count, plural, =1 {1 credit} other {# credits}}"
+    "creditsSpent": "{count, plural, =1 {1 credit} other {# credits}}",
+    "showFailed": "Show failed attempts",
+    "emptySuccessOnly": "No successful generations yet. Failed attempts are hidden — turn them on to see them (they were never charged)."
   },
   "AdminSettings": {
     "title": "Admin Settings",
@@ -219,6 +231,7 @@
     "creditsLabel": "Credits per generation",
     "creditsHelp": "Must be at least 1. The billing path rejects a cost of 0, so a model with 0 credits fails every generation.",
     "enabledLabel": "Available",
+    "supportsImageToImageLabel": "Supports image-to-image",
     "sortOrderLabel": "Sort order",
     "providerLabel": "Provider",
     "upstreamModelLabel": "Upstream model",

@@ -65,6 +65,16 @@ export const ERR_PAYMENT_PROVIDER = 50200; // 支付服务不可用（后端调 
 export const ERR_BILLING_NOT_CONFIGURED = 50300; // 后端没配 STRIPE_SECRET_KEY
 export const ERR_PLAN_NOT_PURCHASABLE = 50301; // 档位存在但还没在 Stripe 建好 Price
 
+/**
+ * 后端没配对象存储（R2 五项不全），参考图功能不可用。
+ *
+ * **刻意不进 `lib/bff.ts` 的 `INFRA_CODES`。** 那张表把码换成通用的
+ * "service temporarily unavailable"，对这一条是错的：它不是"稍后重试就好"的抖动，
+ * 而是一个**配置缺失** —— 重试一万次都一样。前端要按这个码显示"本部署未开启参考图"，
+ * 让用户改用文生图，而不是在那里反复点。
+ */
+export const ERR_STORAGE_NOT_CONFIGURED = 50302;
+
 export type Result<T> =
   | { ok: true; data: T }
   | { ok: false; status: number; error: BackendError };
@@ -171,7 +181,36 @@ export type CreateGenerationBody = {
   model: string;
   aspectRatio: AspectRatio;
   isPublic: boolean;
+  /**
+   * 参考图的**对象键**（`POST /uploads/reference` 返回的），最多 8 个，**顺序有意义**。
+   *
+   * 顺序对应上游的 input_image、input_image_2…，而"第一张是主体、后面是风格参考"
+   * 的语义来自用户在界面上的排列——任何一层排序或去重都会悄悄改变生成结果。
+   *
+   * 是键而不是 URL：后端自己从配置拼 URL，于是不存在"用户可控的 URL"，
+   * 也就不需要那条容易出绕过的归属校验（见后端 internal/handler/uploads.go）。
+   */
+  referenceKeys?: string[];
 };
+
+/**
+ * 上传一张参考图，返回后端分配的**不透明对象键**。
+ *
+ * 一次一张：8 张挤在一个请求里会突破 Vercel 函数 4.5MB 与宿主 nginx 2MB 两道
+ * 请求体上限，而那两个 413 都不带任何有用信息（见 lib/reference-images.ts 的表格）。
+ *
+ * 传 data URL 而不是 multipart 的理由见 app/api/uploads/reference/route.ts。
+ */
+export function uploadReferenceImage(
+  token: string,
+  dataURL: string,
+): Promise<Result<{ key: string }>> {
+  return request<{ key: string }>("/uploads/reference", {
+    ...jsonPost({ image: dataURL }),
+    headers: { "content-type": "application/json", authorization: `Bearer ${token}` },
+    cache: "no-store",
+  });
+}
 
 /**
  * 发起一次生成。后端是**同步**的：连接会挂住直到上游出图（Flux 实测约 21 秒，
@@ -253,11 +292,14 @@ export function createPortal(token: string): Promise<Result<{ portalUrl: string 
  */
 export function listGenerations(
   token: string,
-  opts: { cursor?: string; limit?: number } = {},
+  opts: { cursor?: string; limit?: number; includeFailed?: boolean } = {},
 ): Promise<Result<GenerationPage>> {
   const params = new URLSearchParams();
   if (opts.cursor) params.set("cursor", opts.cursor);
   if (opts.limit !== undefined) params.set("limit", String(opts.limit));
+  // 后端**只认字面量 "true"**（宽松解析会让一个拼错的查询串悄悄打开开关）。
+  // 只在为真时才带上这个参数，false 就干脆不发——省得依赖两边对 "false" 的理解一致。
+  if (opts.includeFailed) params.set("includeFailed", "true");
   const qs = params.toString();
   return request<GenerationPage>(`/generations${qs ? `?${qs}` : ""}`, {
     headers: { authorization: `Bearer ${token}` },

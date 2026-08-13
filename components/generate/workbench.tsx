@@ -6,6 +6,13 @@ import { useRouter } from "next/navigation";
 import { ParamPanel } from "@/components/generate/param-panel";
 import { ResultPanel } from "@/components/generate/result-panel";
 import { InsufficientCreditsDialog } from "@/components/generate/insufficient-credits-dialog";
+import type { RefImage } from "@/components/generate/reference-picker";
+import {
+  compressToDataURL,
+  validateSelection,
+  type RejectReason,
+} from "@/lib/reference-images";
+import { ERR_STORAGE_NOT_CONFIGURED } from "@/lib/backend";
 import type { CreditBalance, Generation, ImageModel } from "@/lib/generation-types";
 
 const ERR_INSUFFICIENT_CREDITS = 40001;
@@ -34,6 +41,93 @@ export function Workbench({
   const [showUpgrade, setShowUpgrade] = useState(false);
   const [balance, setBalance] = useState<CreditBalance>(initialBalance);
 
+  const [refImages, setRefImages] = useState<RefImage[]>([]);
+  const [refRejected, setRefRejected] = useState<{ reason: RejectReason; count: number }[]>([]);
+  // storageOff 一旦为真就不再变回：它代表"这个部署没配对象存储"，是配置事实而不是
+  // 抖动。一次 50302 之后把入口关掉，比让用户对着一个必然失败的按钮反复点更好。
+  const [storageOff, setStorageOff] = useState(false);
+
+  const model = models.find((m) => m.id === modelId) ?? models[0];
+
+  /**
+   * 压缩 + 上传一张图，就地更新它的状态。
+   *
+   * **每张独立成败。** 传 5 张成功 3 张时，成功的那 3 张照常可用、失败的 2 张
+   * 标红可重试 —— 不因为两张失败就阻止用户拿 3 张去生成，也不静默把失败的丢掉
+   * （那会让用户以为参考图不起作用）。
+   */
+  async function uploadOne(id: string, file: File) {
+    const patch = (p: Partial<RefImage>) =>
+      setRefImages((prev) => prev.map((x) => (x.id === id ? { ...x, ...p } : x)));
+    try {
+      patch({ status: "compressing", error: undefined });
+      const dataURL = await compressToDataURL(file);
+      patch({ status: "uploading" });
+      const res = await fetch("/api/uploads/reference", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ image: dataURL }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        if (body?.code === ERR_STORAGE_NOT_CONFIGURED) {
+          // 后端没配 R2。这不是这一张图的问题，整个功能都不可用。
+          setStorageOff(true);
+          setRefImages([]);
+          return;
+        }
+        patch({ status: "error", error: "upload" });
+        return;
+      }
+      const { key } = (await res.json()) as { key: string };
+      patch({ status: "done", key });
+    } catch {
+      // createImageBitmap 对损坏的文件会抛异常，网络层失败也走这里。
+      patch({ status: "error", error: "compress" });
+    }
+  }
+
+  function addRefImages(files: File[]) {
+    const { accepted, rejected } = validateSelection(files, refImages.length);
+    // 把被拒的按原因聚合，显示成一条而不是每个文件一条。
+    const grouped = new Map<RejectReason, number>();
+    for (const r of rejected) grouped.set(r.reason, (grouped.get(r.reason) ?? 0) + 1);
+    setRefRejected([...grouped].map(([reason, count]) => ({ reason, count })));
+
+    const fresh: RefImage[] = accepted.map((file) => ({
+      // crypto.randomUUID 在所有目标浏览器上都有（https 或 localhost）。
+      id: crypto.randomUUID(),
+      previewUrl: URL.createObjectURL(file),
+      key: null,
+      status: "compressing" as const,
+      file,
+    }));
+    setRefImages((prev) => [...prev, ...fresh]);
+    for (const img of fresh) void uploadOne(img.id, img.file);
+  }
+
+  function removeRefImage(id: string) {
+    setRefImages((prev) => {
+      const gone = prev.find((x) => x.id === id);
+      // 撤销 blob URL，否则每选一次图就泄一份解码后的位图，选到第八张时移动端
+      // 浏览器已经很吃力了。
+      if (gone) URL.revokeObjectURL(gone.previewUrl);
+      return prev.filter((x) => x.id !== id);
+    });
+  }
+
+  function retryRefImage(id: string) {
+    const img = refImages.find((x) => x.id === id);
+    if (img) void uploadOne(id, img.file);
+  }
+
+  // 还有图在压缩或上传时禁止提交。
+  //
+  // **这条是防"付了钱拿到忽略了参考图的结果"。** 提交时只会带上已经拿到键的那些，
+  // 所以在上传完成之前点生成，用户会按图生图的预期付费、拿到一张少了参考图的结果，
+  // 而没有任何地方提示发生了这件事。
+  const refBusy = refImages.some((i) => i.status === "compressing" || i.status === "uploading");
+
   async function refreshBalance() {
     try {
       const res = await fetch("/api/credits");
@@ -53,7 +147,18 @@ export function Workbench({
       const res = await fetch("/api/generations", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ prompt, model: modelId, aspectRatio, isPublic }),
+        body: JSON.stringify({
+          prompt,
+          model: modelId,
+          aspectRatio,
+          isPublic,
+          // 只带**已经拿到键**的那些，且保持用户排列的顺序——顺序对应上游的
+          // input_image、input_image_2…。失败的那几张不带（生成按钮在还有
+          // "上传中"时是禁用的，所以走到这里只剩 done 与 error 两种）。
+          referenceKeys: refImages
+            .filter((i) => i.status === "done" && i.key)
+            .map((i) => i.key as string),
+        }),
         signal: AbortSignal.timeout(CLIENT_TIMEOUT_MS),
       });
 
@@ -132,6 +237,15 @@ export function Workbench({
           pending={pending}
           isPublic={isPublic}
           onIsPublicChange={setIsPublic}
+          refImages={refImages}
+          refRejected={refRejected}
+          refBusy={refBusy}
+          refDisabledReason={
+            storageOff ? "storage" : model?.supportsImageToImage ? null : "unsupported"
+          }
+          onAddRefImages={addRefImages}
+          onRemoveRefImage={removeRefImage}
+          onRetryRefImage={retryRefImage}
         />
         <ResultPanel pending={pending} current={current} error={error} recent={recent} />
       </div>

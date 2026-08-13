@@ -44,6 +44,22 @@ function parseAspectRatio(value: unknown): AspectRatio | null {
     : null;
 }
 
+
+/**
+ * 收窄 referenceKeys。缺失 → 空数组；不是字符串数组 → null（调用方回 400）。
+ *
+ * 与 parseAspectRatio 同一个态度：**缺失与非法区别待遇**，且**不静默改写**。
+ * 这里刻意只检查类型、不检查键的形状——形状规则（`ref/<userID>/<name>`、
+ * 属主、上限 8）只有后端能真正判定（它知道调用者是谁），在前端复制一份
+ * 只会得到两套迟早走偏的规则。
+ */
+function parseReferenceKeys(value: unknown): string[] | null {
+  if (value === undefined) return [];
+  if (!Array.isArray(value)) return null;
+  if (!value.every((v) => typeof v === "string")) return null;
+  return value as string[];
+}
+
 export async function POST(req: Request) {
   const forbidden = checkSameOrigin(req);
   if (forbidden) {
@@ -64,6 +80,7 @@ export async function POST(req: Request) {
     model?: unknown;
     aspectRatio?: unknown;
     isPublic?: unknown;
+    referenceKeys?: unknown;
   };
 
   const prompt = typeof fields.prompt === "string" ? fields.prompt.trim() : "";
@@ -88,7 +105,25 @@ export async function POST(req: Request) {
   // model id **不在这里查表**：模型列表活在后端 `image_models` 表里，前端再存一份就是
   // 一份必然漂移的副本（运营在后台禁用一个模型，前端的副本不会知道）。未知 id 由后端
   // 回 40000，存在但被禁用的模型回 40003——两者语义不同，见 lib/backend.ts 的注释。
-  const res = await createGeneration(token, { prompt, model: modelId, aspectRatio, isPublic });
+  // 参考图键：**非数组或含非字符串一律 400，不静默 filter**。静默过滤的后果是
+  // 用户选了 8 张、只有 6 张进了请求，而界面上没有任何提示——他会以为参考图不起作用。
+  // 键的**内容**（形状、属主、数量上限）由后端校验，这里只保证类型对得上：
+  // 在两处各写一份形状规则，迟早会走偏。
+  const referenceKeys = parseReferenceKeys(fields.referenceKeys);
+  if (referenceKeys === null) {
+    return NextResponse.json(
+      { code: ERR_BAD_REQUEST, message: "referenceKeys must be an array of strings" },
+      { status: 400 },
+    );
+  }
+
+  const res = await createGeneration(token, {
+    prompt,
+    model: modelId,
+    aspectRatio,
+    isPublic,
+    referenceKeys,
+  });
   if (!res.ok) {
     // 402 + 40001（余额不足）也走这条路，码原样透传——工作台按它弹升级框。
     const out = toClientError(res.error, res.status, "generations");
@@ -120,7 +155,11 @@ export async function GET(req: Request) {
   const limit =
     rawLimit !== null && Number.isFinite(Number(rawLimit)) ? Number(rawLimit) : undefined;
 
-  const res = await listGenerations(token, { cursor, limit });
+  // includeFailed 只认字面量 "true"，与后端一致。宽松解析（`?includeFailed=1`）
+  // 会让一个拼错的查询串悄悄打开开关，而"莫名多出一堆失败记录"看起来像系统坏了。
+  const includeFailed = url.searchParams.get("includeFailed") === "true";
+
+  const res = await listGenerations(token, { cursor, limit, includeFailed });
   if (!res.ok) {
     const out = toClientError(res.error, res.status, "history");
     return NextResponse.json(out.body, { status: out.status });

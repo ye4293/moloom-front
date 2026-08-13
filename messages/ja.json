@@ -86,7 +86,7 @@
     "model": "モデル",
     "modelOption": "{name} · {credits} 回",
     "aspectRatio": "比率",
-    "reference": "参考画像（任意）",
+    "reference": "参考画像",
     "noImageToImage": "このモデルは画像から画像生成に対応していません",
     "promptLabel": "プロンプト",
     "promptPlaceholder": "作りたい画像を入力…",
@@ -100,7 +100,17 @@
     "failed": "生成に失敗しました：{error}。{credits} 回を返却しました。",
     "timeout": "生成がタイムアウトしました。回数は消費されている可能性があります。しばらくしてから履歴で確認してください。",
     "networkError": "ネットワークエラーです。もう一度お試しください。",
-    "genericError": "問題が発生しました"
+    "genericError": "問題が発生しました",
+    "referenceCount": "{count}/{max}",
+    "referenceAdd": "画像を追加",
+    "referenceRemove": "この画像を削除",
+    "referenceRetry": "再アップロード",
+    "referenceFull": "上限に達しました",
+    "referenceHint": "任意。最大 {max} 枚。画像はブラウザ側で圧縮され、透明部分は白になります。",
+    "referenceUnavailable": "このデプロイでは参考画像を利用できません。",
+    "referenceTooMany": "参考画像は最大 {max} 枚までです。",
+    "referenceUnsupportedType": "{count} 個のファイルをスキップしました。PNG・JPEG・WebP のみ利用できます。",
+    "referenceUploadFailed": "{count} 枚の画像をアップロードできませんでした。生成には成功した分のみ使用されます。"
   },
   "InsufficientCredits": {
     "title": "回数が足りません",
@@ -146,7 +156,9 @@
     "notCharged": "クレジットは消費されていません。",
     "temporaryLink": "このリンクは期限切れの可能性があります。",
     "openImage": "原寸で開く",
-    "creditsSpent": "{count, plural, other {# クレジット}}"
+    "creditsSpent": "{count, plural, other {# クレジット}}",
+    "showFailed": "失敗した生成を表示",
+    "emptySuccessOnly": "成功した生成はまだありません。失敗した記録は非表示です。スイッチを入れると確認できます（いずれも課金されていません）。"
   },
   "AdminSettings": {
     "title": "管理設定",
@@ -219,6 +231,7 @@
     "creditsLabel": "生成あたりのクレジット",
     "creditsHelp": "1 以上である必要があります。課金処理はコスト 0 を拒否するため、0 のモデルは毎回失敗します。",
     "enabledLabel": "利用可能",
+    "supportsImageToImageLabel": "画像から画像に対応",
     "sortOrderLabel": "並び順",
     "providerLabel": "プロバイダー",
     "upstreamModelLabel": "上流モデル",

@@ -86,7 +86,7 @@
     "model": "模型",
     "modelOption": "{name} · {credits} 次",
     "aspectRatio": "比例",
-    "reference": "参考图（可选）",
+    "reference": "参考图",
     "noImageToImage": "当前模型不支持图生图",
     "promptLabel": "提示词",
     "promptPlaceholder": "描述你想要的画面…",
@@ -100,7 +100,17 @@
     "failed": "生成失败：{error}。已退回 {credits} 次。",
     "timeout": "生成超时。次数可能已扣除，请稍后在历史记录中确认。",
     "networkError": "网络错误，请重试。",
-    "genericError": "出了点问题"
+    "genericError": "出了点问题",
+    "referenceCount": "{count}/{max}",
+    "referenceAdd": "添加图片",
+    "referenceRemove": "移除这张",
+    "referenceRetry": "重新上传",
+    "referenceFull": "已达上限",
+    "referenceHint": "可选。最多 {max} 张。图片会在浏览器里压缩，透明区域会变成白色。",
+    "referenceUnavailable": "本部署未开启参考图功能。",
+    "referenceTooMany": "最多只能添加 {max} 张参考图。",
+    "referenceUnsupportedType": "已跳过 {count} 个文件——只支持 PNG、JPEG 和 WebP。",
+    "referenceUploadFailed": "有 {count} 张图没能上传。生成时只会使用上传成功的那几张。"
   },
   "InsufficientCredits": {
     "title": "次数不够了",
@@ -146,7 +156,9 @@
     "notCharged": "未扣除次数。",
     "temporaryLink": "该链接可能已失效。",
     "openImage": "查看原图",
-    "creditsSpent": "{count, plural, other {# 次}}"
+    "creditsSpent": "{count, plural, other {# 次}}",
+    "showFailed": "显示失败的记录",
+    "emptySuccessOnly": "还没有成功的生成。失败的记录已隐藏——打开开关可以查看（它们都没有扣次数）。"
   },
   "AdminSettings": {
     "title": "后台设置",
@@ -219,6 +231,7 @@
     "creditsLabel": "每次生成扣费",
     "creditsHelp": "必须 ≥ 1。扣费路径拒绝 cost 为 0，所以扣费为 0 的模型每次生成都会失败。",
     "enabledLabel": "可用",
+    "supportsImageToImageLabel": "支持图生图",
     "sortOrderLabel": "排序",
     "providerLabel": "上游厂商",
     "upstreamModelLabel": "上游模型",

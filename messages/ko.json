@@ -86,7 +86,7 @@
     "model": "모델",
     "modelOption": "{name} · {credits}회",
     "aspectRatio": "비율",
-    "reference": "참고 이미지(선택)",
+    "reference": "참고 이미지",
     "noImageToImage": "이 모델은 이미지 기반 생성을 지원하지 않습니다",
     "promptLabel": "프롬프트",
     "promptPlaceholder": "원하는 이미지를 입력하세요…",
@@ -100,7 +100,17 @@
     "failed": "생성 실패: {error}. {credits}회를 반환했습니다.",
     "timeout": "생성 시간이 초과되었습니다. 횟수가 차감되었을 수 있으니 잠시 후 기록에서 확인해 주세요.",
     "networkError": "네트워크 오류입니다. 다시 시도해 주세요.",
-    "genericError": "문제가 발생했습니다"
+    "genericError": "문제가 발생했습니다",
+    "referenceCount": "{count}/{max}",
+    "referenceAdd": "이미지 추가",
+    "referenceRemove": "이 이미지 제거",
+    "referenceRetry": "다시 업로드",
+    "referenceFull": "최대 개수에 도달했습니다",
+    "referenceHint": "선택 사항. 최대 {max}장. 이미지는 브라우저에서 압축되며 투명한 부분은 흰색이 됩니다.",
+    "referenceUnavailable": "이 배포에서는 참고 이미지를 사용할 수 없습니다.",
+    "referenceTooMany": "참고 이미지는 최대 {max}장까지 추가할 수 있습니다.",
+    "referenceUnsupportedType": "{count}개 파일을 건너뛰었습니다. PNG, JPEG, WebP만 사용할 수 있습니다.",
+    "referenceUploadFailed": "{count}장의 이미지를 업로드하지 못했습니다. 생성에는 성공한 이미지만 사용됩니다."
   },
   "InsufficientCredits": {
     "title": "횟수가 부족합니다",
@@ -146,7 +156,9 @@
     "notCharged": "크레딧이 차감되지 않았습니다.",
     "temporaryLink": "이 링크는 만료되었을 수 있습니다.",
     "openImage": "원본 크기로 열기",
-    "creditsSpent": "{count, plural, other {# 크레딧}}"
+    "creditsSpent": "{count, plural, other {# 크레딧}}",
+    "showFailed": "실패한 생성 표시",
+    "emptySuccessOnly": "아직 성공한 생성이 없습니다. 실패한 기록은 숨겨져 있으며, 스위치를 켜면 확인할 수 있습니다(모두 차감되지 않았습니다)."
   },
   "AdminSettings": {
     "title": "관리자 설정",
@@ -219,6 +231,7 @@
     "creditsLabel": "생성당 크레딧",
     "creditsHelp": "1 이상이어야 합니다. 과금 로직이 비용 0을 거부하므로 0인 모델은 매번 생성에 실패합니다.",
     "enabledLabel": "사용 가능",
+    "supportsImageToImageLabel": "이미지-투-이미지 지원",
     "sortOrderLabel": "정렬 순서",
     "providerLabel": "제공자",
     "upstreamModelLabel": "업스트림 모델",

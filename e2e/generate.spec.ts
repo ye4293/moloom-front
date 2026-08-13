@@ -214,6 +214,124 @@ test("新账号的账户页显示未订阅与去定价页的入口", async ({ pa
  * 1280×720，**一个漏写 `md:` 前缀的样式在桌面端毫无症状**，只有 375px 才暴露。
  * 这里跑完整的出图路径，并复用同一组折叠线/横向溢出断言。
  */
+
+/** 一个最小的合法 PNG（1×1），够 canvas 解码，也够后端嗅探出 image/png。 */
+const TINY_PNG = Buffer.from(
+  "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
+  "base64",
+);
+
+/**
+ * 拦截参考图上传，返回一个假的对象键。
+ *
+ * **e2e 后端不配 R2**（见文件头），真实上传必然 503。而这里要考察的是**布局**——
+ * 8 张缩略图同时在场时生成按钮还在不在首屏——那与存储是否配好无关。
+ * 拦截让这个最坏情况能被确定性地构造出来，不必为了测布局去搭一套 minio。
+ *
+ * `delayMs > 0` 用来考察"上传未完成时禁止提交"。
+ */
+async function stubReferenceUpload(page: Page, delayMs = 0) {
+  let n = 0;
+  await page.route("**/api/uploads/reference", async (route) => {
+    n += 1;
+    if (delayMs > 0) await new Promise((r) => setTimeout(r, delayMs));
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({ key: `ref/1/stub-${n}.jpg` }),
+    });
+  });
+}
+
+async function addReferenceImages(page: Page, count: number) {
+  await page.getByTestId("reference-input").setInputFiles(
+    Array.from({ length: count }, (_, i) => ({
+      name: `ref-${i}.png`,
+      mimeType: "image/png",
+      buffer: TINY_PNG,
+    })),
+  );
+}
+
+test.describe("参考图", () => {
+  test("满 8 张缩略图时生成按钮仍在首屏（桌面）", async ({ page }) => {
+    await stubReferenceUpload(page);
+    await signUp(page, "ref-fold");
+    await page.goto("/generate");
+    // 按钮在 prompt 为空时本来就禁用，先填上，才能考察是不是被缩略图顶下去了。
+    await page.getByTestId("prompt-input").fill("quick cat");
+
+    await addReferenceImages(page, 8);
+    await expect(page.getByTestId("reference-thumb")).toHaveCount(8);
+    // 等全部上传完成，此时布局最高（缩略图 + 计数 + 提示都在）。
+    await expect(generateButton(page)).toBeEnabled({ timeout: 10_000 });
+
+    await expectGenerateButtonAboveFold(page);
+  });
+
+  test("上传未完成时禁止提交", async ({ page }) => {
+    // **这条防的是"付了钱拿到忽略了参考图的结果"。** 提交只带已拿到键的那些，
+    // 所以在上传完成之前点生成，用户会按图生图的预期付费、拿到一张少了参考图的
+    // 结果，而没有任何地方提示发生过这件事。
+    await stubReferenceUpload(page, 1500);
+    await signUp(page, "ref-busy");
+    await page.goto("/generate");
+    await page.getByTestId("prompt-input").fill("quick cat");
+
+    await expect(generateButton(page)).toBeEnabled();
+    await addReferenceImages(page, 2);
+    await expect(generateButton(page)).toBeDisabled();
+    // 上传完成后恢复可点。
+    await expect(generateButton(page)).toBeEnabled({ timeout: 15_000 });
+  });
+
+  test("不支持的文件类型被跳过并说明原因，不静默丢弃", async ({ page }) => {
+    await stubReferenceUpload(page);
+    await signUp(page, "ref-type");
+    await page.goto("/generate");
+
+    await page.getByTestId("reference-input").setInputFiles([
+      { name: "ok.png", mimeType: "image/png", buffer: TINY_PNG },
+      { name: "nope.gif", mimeType: "image/gif", buffer: Buffer.from("GIF89a") },
+    ]);
+
+    // 合法的那张进来了，非法的那张**有提示**——静默丢弃会让用户以为功能坏了。
+    await expect(page.getByTestId("reference-thumb")).toHaveCount(1);
+    await expect(page.getByTestId("reference-rejected")).toBeVisible();
+  });
+
+  test("后端未配对象存储时给出明确说明而不是反复失败", async ({ page }) => {
+    // e2e 后端**真的**没配 R2，所以这条不拦截、走真实的 503 + 50302。
+    // 断言的是"降级说得清"：用户看到"本部署未开启参考图"，而不是一个通用报错。
+    await signUp(page, "ref-nostore");
+    await page.goto("/generate");
+
+    await addReferenceImages(page, 1);
+    await expect(page.getByTestId("reference-unavailable")).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByTestId("reference-add")).toBeDisabled();
+  });
+});
+
+test.describe("参考图移动端（375×667）", () => {
+  test.use({ viewport: { width: 375, height: 667 } });
+
+  test("满 8 张缩略图时生成按钮仍在首屏", async ({ page }) => {
+    // **这是本次改动最需要盯的一条。** 参数面板在 375 宽下是顶部横条，
+    // 加了缩略图行之后最容易把生成按钮顶到折叠线以下。
+    await stubReferenceUpload(page);
+    await signUp(page, "ref-fold-m");
+    await page.goto("/generate");
+    // 按钮在 prompt 为空时本来就禁用，先填上，才能考察是不是被缩略图顶下去了。
+    await page.getByTestId("prompt-input").fill("quick cat");
+
+    await addReferenceImages(page, 8);
+    await expect(page.getByTestId("reference-thumb")).toHaveCount(8);
+    await expect(generateButton(page)).toBeEnabled({ timeout: 10_000 });
+
+    await expectGenerateButtonAboveFold(page);
+  });
+});
+
 test.describe("移动端（375×667）", () => {
   test.use({ viewport: { width: 375, height: 667 } });
 

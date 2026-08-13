@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { ModelSelector } from "@/components/generate/model-selector";
+import { ReferencePicker, type RefImage } from "@/components/generate/reference-picker";
 import { Button } from "@/components/ui/button";
+import type { RejectReason } from "@/lib/reference-images";
 import { ASPECT_RATIOS, type ImageModel } from "@/lib/generation-types";
 
 export function ParamPanel({
@@ -18,6 +19,13 @@ export function ParamPanel({
   pending,
   isPublic,
   onIsPublicChange,
+  refImages,
+  refRejected,
+  refBusy,
+  refDisabledReason,
+  onAddRefImages,
+  onRemoveRefImage,
+  onRetryRefImage,
 }: {
   models: readonly ImageModel[];
   modelId: string;
@@ -30,9 +38,16 @@ export function ParamPanel({
   pending: boolean;
   isPublic: boolean;
   onIsPublicChange: (v: boolean) => void;
+  refImages: RefImage[];
+  refRejected: { reason: RejectReason; count: number }[];
+  /** 还有图在压缩或上传。生成按钮据此禁用（理由见 workbench 的 refBusy 注释）。 */
+  refBusy: boolean;
+  refDisabledReason: "unsupported" | "storage" | null;
+  onAddRefImages: (files: File[]) => void;
+  onRemoveRefImage: (id: string) => void;
+  onRetryRefImage: (id: string) => void;
 }) {
   const t = useTranslations("Generate");
-  const [referenceName, setReferenceName] = useState<string | null>(null);
   const model = models.find((m) => m.id === modelId) ?? models[0];
 
   return (
@@ -68,24 +83,15 @@ export function ParamPanel({
         </div>
       </div>
 
-      <div className="space-y-1.5">
-        <label htmlFor="reference" className="text-xs text-muted-foreground">
-          {t("reference")}
-        </label>
-        {/* 本轮不做真实上传（R2 未接入），仅取文件名做本地预览，验证布局是否合理。 */}
-        <input
-          id="reference"
-          type="file"
-          accept="image/*"
-          disabled={pending || !model.supportsImageToImage}
-          onChange={(e) => setReferenceName(e.target.files?.[0]?.name ?? null)}
-          className="w-full text-xs file:mr-2 file:rounded file:border file:border-input file:bg-background file:px-2 file:py-1 file:text-xs"
-        />
-        {!model.supportsImageToImage && (
-          <p className="text-xs text-muted-foreground">{t("noImageToImage")}</p>
-        )}
-        {referenceName && <p className="truncate text-xs">{referenceName}</p>}
-      </div>
+      <ReferencePicker
+        images={refImages}
+        disabled={pending || refDisabledReason !== null}
+        disabledReason={refDisabledReason}
+        onAdd={onAddRefImages}
+        onRemove={onRemoveRefImage}
+        onRetry={onRetryRefImage}
+        rejected={refRejected}
+      />
 
       {/*
         `mt-auto` 把 prompt 与生成按钮锚在参数列底部——只在参数列是**整列满高**时
@@ -109,7 +115,16 @@ export function ParamPanel({
           className="w-full resize-none rounded-md border border-input bg-background p-2 text-sm"
         />
         <div className="flex items-center gap-2">
-          <Button type="submit" className="flex-1" disabled={pending || !prompt.trim()}>
+          {/*
+            refBusy 也要禁用。**这条防的是"付了钱拿到忽略了参考图的结果"**：
+            提交时只带已经拿到键的那些，所以在上传完成之前点生成，用户会按图生图的
+            预期付费、拿到一张少了参考图的图，而没有任何地方提示发生了这件事。
+          */}
+          <Button
+            type="submit"
+            className="flex-1"
+            disabled={pending || refBusy || !prompt.trim()}
+          >
             {pending ? t("submitPending") : t("submit", { credits: model.credits })}
           </Button>
           <button

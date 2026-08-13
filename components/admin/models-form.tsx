@@ -14,6 +14,7 @@ type Draft = {
   credits: string;
   enabled: boolean;
   sortOrder: string;
+  supportsImageToImage: boolean;
 };
 
 function toDraft(m: AdminModel): Draft {
@@ -22,6 +23,7 @@ function toDraft(m: AdminModel): Draft {
     credits: String(m.credits),
     enabled: m.enabled,
     sortOrder: String(m.sortOrder),
+    supportsImageToImage: m.supportsImageToImage,
   };
 }
 
@@ -75,6 +77,7 @@ export function ModelsForm({ models: initial }: { models: AdminModel[] }) {
     if (d.enabled !== m.enabled) updates.enabled = d.enabled;
     if (credits !== m.credits) updates.credits = credits;
     if (sortOrder !== m.sortOrder) updates.sortOrder = sortOrder;
+    if (d.supportsImageToImage !== m.supportsImageToImage) updates.supportsImageToImage = d.supportsImageToImage;
 
     if (Object.keys(updates).length === 0) {
       setStatus((prev) => ({ ...prev, [m.id]: "saved" }));
@@ -175,6 +178,16 @@ export function ModelsForm({ models: initial }: { models: AdminModel[] }) {
                   onChange={(e) => setDraft(m.id, { enabled: e.target.checked })}
                 />
                 <Label htmlFor={`${m.id}-enabled`}>{t("enabledLabel")}</Label>
+              </div>
+              <div className="flex items-center gap-2 sm:pt-6">
+                <input
+                  id={`${m.id}-img2img`}
+                  type="checkbox"
+                  className="size-4 accent-primary"
+                  checked={d.supportsImageToImage}
+                  onChange={(e) => setDraft(m.id, { supportsImageToImage: e.target.checked })}
+                />
+                <Label htmlFor={`${m.id}-img2img`}>{t("supportsImageToImageLabel")}</Label>
               </div>
             </div>
 
