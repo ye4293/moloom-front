@@ -1,6 +1,6 @@
 {
   "Metadata": {
-    "title": "Image Studio",
+    "title": "Moloom · AI Image Studio",
     "description": "AI 画像生成、月額サブスクリプション。",
     "generateTitle": "生成 · Image Studio",
     "pricingTitle": "料金 · Image Studio",
@@ -8,10 +8,11 @@
     "adminSettingsTitle": "管理設定 · Image Studio",
     "adminPlansTitle": "プラン · Image Studio",
     "adminModelsTitle": "モデル · Image Studio",
-    "adminUsersTitle": "ユーザー · Image Studio"
+    "adminUsersTitle": "ユーザー · Image Studio",
+    "galleryTitle": "ギャラリー · Moloom"
   },
   "Nav": {
-    "brand": "Image Studio",
+    "brand": "moloom",
     "generate": "生成",
     "account": "アカウント",
     "history": "履歴",
@@ -19,13 +20,54 @@
     "getStarted": "無料で始める",
     "language": "言語",
     "theme": "テーマを切り替える",
-    "admin": "管理"
+    "admin": "管理",
+    "gallery": "ギャラリー",
+    "pricing": "料金"
   },
   "Home": {
     "title": "思いどおりに画像を生成",
     "subtitle": "モデルを選び、作りたい画像を書くだけ。数秒で結果が届きます。月額プランに加入し、足りなくなったらいつでも追加できます。",
     "getStartedFree": "無料で始める",
-    "signIn": "ログイン"
+    "signIn": "ログイン",
+    "eyebrow": "アイデアを形に",
+    "heroLine1": "想像を、",
+    "heroLine2": "目に見える形へ。",
+    "heroDescription": "言葉や参考画像から制作を始めましょう。画像モデルを探し、自分らしい作品を作り、気に入ったら共有できます。",
+    "continueCreating": "制作を続ける",
+    "exploreGallery": "ギャラリーを見る",
+    "heroFootnote": "現在利用できるモデルで制作。公開するかどうかはあなたが選べます。",
+    "heroVisualLabel": "作品のビジュアル",
+    "communityCreation": "コミュニティの作品",
+    "yourCanvas": "ここから始まるキャンバス",
+    "visualTag": "画像スタジオ",
+    "galleryEyebrow": "コミュニティギャラリー",
+    "galleryTitle": "形になったアイデア",
+    "galleryDescription": "作者が公開を選んだ作品を集めました。次の制作のヒントを見つけてください。",
+    "viewAllGallery": "すべて見る",
+    "viewImage": "画像を開く",
+    "galleryEmpty": "最初の作品を待っています",
+    "galleryEmptyDescription": "スタジオで保存して公開した画像がここに表示されます。",
+    "galleryUnavailable": "ギャラリーを読み込めません",
+    "galleryUnavailableDescription": "後でもう一度お試しください。スタジオは引き続き利用できます。",
+    "modelsEyebrow": "モデルスタジオ",
+    "modelsTitle": "表現に合わせて選ぶ",
+    "modelsDescription": "対応予定の画像モデルシリーズをご紹介します。利用可能なモデルは現在の一覧に基づきます。",
+    "modelDescription": {
+      "flux": "光と質感を細やかに表現する画像モデル。",
+      "grok": "新しい視点から印象的な画像を生み出します。",
+      "gpt": "日々のアイデアに使える画像生成と編集。"
+    },
+    "available": "利用可能",
+    "comingSoon": "対応予定",
+    "availabilityUnknown": "スタジオで確認",
+    "availableModels": "利用可能なモデル：{count} 件",
+    "modelAvailabilityNote": "生成に使えるのは有効なモデルだけです。ほかのシリーズは公開後に表示されます。",
+    "finalEyebrow": "次のアイデア",
+    "finalTitleGuest": "あなたの作品を作ってみませんか？",
+    "finalTitleSignedIn": "次の画像は、あなたのアイデアから。",
+    "finalDescriptionGuest": "アカウントを作成し、利用可能なモデルで制作を始めましょう。",
+    "finalDescriptionSignedIn": "スタジオに戻って制作や共有を続けましょう。",
+    "visualFallback": "想像 · 制作 · 共有"
   },
   "Error": {
     "title": "問題が発生しました",
@@ -281,5 +323,18 @@
     "loadFailed": "ユーザーを読み込めませんでした。",
     "empty": "該当するユーザーがいません。",
     "updateFailed": "ユーザーを更新できませんでした。"
+  },
+  "Gallery": {
+    "backHome": "ホームに戻る",
+    "eyebrow": "作品を探す",
+    "title": "公開ギャラリー",
+    "description": "作者が共有を選んだ画像です。画像を開くと原寸で見られます。",
+    "viewImage": "画像を開く",
+    "empty": "公開作品はまだありません",
+    "emptyDescription": "スタジオで公開した画像がここに表示されます。",
+    "unavailable": "ギャラリーを読み込めません",
+    "unavailableDescription": "後でもう一度お試しください。",
+    "nextPage": "次のページ",
+    "firstPage": "最初のページへ"
   }
 }

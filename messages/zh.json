@@ -1,6 +1,6 @@
 {
   "Metadata": {
-    "title": "Image Studio",
+    "title": "Moloom · AI Image Studio",
     "description": "AI 图像生成，按月订阅。",
     "generateTitle": "生成 · Image Studio",
     "pricingTitle": "定价 · Image Studio",
@@ -8,10 +8,11 @@
     "adminSettingsTitle": "后台设置 · Image Studio",
     "adminPlansTitle": "档位 · Image Studio",
     "adminModelsTitle": "模型 · Image Studio",
-    "adminUsersTitle": "用户 · Image Studio"
+    "adminUsersTitle": "用户 · Image Studio",
+    "galleryTitle": "画廊 · Moloom"
   },
   "Nav": {
-    "brand": "Image Studio",
+    "brand": "moloom",
     "generate": "生成",
     "account": "账户",
     "history": "历史",
@@ -19,13 +20,54 @@
     "getStarted": "免费开始",
     "language": "语言",
     "theme": "切换主题",
-    "admin": "后台"
+    "admin": "后台",
+    "gallery": "画廊",
+    "pricing": "定价"
   },
   "Home": {
     "title": "按你的想法生成图像",
     "subtitle": "选一个模型，描述你要的画面，几秒内拿到结果。按月订阅，不够时随时加量。",
     "getStartedFree": "免费开始",
-    "signIn": "登录"
+    "signIn": "登录",
+    "eyebrow": "让灵感有形",
+    "heroLine1": "想象一切，",
+    "heroLine2": "生成所见。",
+    "heroDescription": "一句描述、一张参考图，就能开启创作。探索不同图像模型，把脑海中的画面变成作品，喜欢的还可以分享给大家。",
+    "continueCreating": "继续创作",
+    "exploreGallery": "探索画廊",
+    "heroFootnote": "使用当前已开放的模型创作，是否公开由你决定。",
+    "heroVisualLabel": "创意图像展示",
+    "communityCreation": "来自创作者的公开作品",
+    "yourCanvas": "你的画布，从这里开始",
+    "visualTag": "图像工作室",
+    "galleryEyebrow": "公开画廊",
+    "galleryTitle": "看看灵感如何成真",
+    "galleryDescription": "这些作品由创作者自愿公开。浏览不同的画面，也许下一张就有你的灵感。",
+    "viewAllGallery": "查看全部作品",
+    "viewImage": "查看大图",
+    "galleryEmpty": "画廊正在等待第一张作品",
+    "galleryEmptyDescription": "在工作台生成并公开保存的作品后，就会展示在这里。",
+    "galleryUnavailable": "画廊暂时无法加载",
+    "galleryUnavailableDescription": "请稍后再试。你仍然可以进入工作台创作。",
+    "modelsEyebrow": "模型工作室",
+    "modelsTitle": "不同模型，不同可能",
+    "modelsDescription": "探索计划支持的图像模型系列。实际可用状态以当前模型列表为准。",
+    "modelDescription": {
+      "flux": "细腻的光影与质感，呈现丰富画面。",
+      "grok": "从另一种创意视角，探索鲜明视觉表达。",
+      "gpt": "适合日常灵感的图像生成与编辑。"
+    },
+    "available": "现已开放",
+    "comingSoon": "计划支持",
+    "availabilityUnknown": "进入工作台查看",
+    "availableModels": "已开放 {count} 个模型",
+    "modelAvailabilityNote": "只有已启用的模型可以生成图像；其他系列上线后会在此显示。",
+    "finalEyebrow": "下一个想法",
+    "finalTitleGuest": "准备好创作自己的作品了吗？",
+    "finalTitleSignedIn": "下一张作品，从你的想法开始。",
+    "finalDescriptionGuest": "创建账户，选择已开放的模型，开始生成图像。",
+    "finalDescriptionSignedIn": "返回工作台，继续创作或分享你的下一张作品。",
+    "visualFallback": "想象 · 创作 · 分享"
   },
   "Error": {
     "title": "出了点问题",
@@ -281,5 +323,18 @@
     "loadFailed": "无法加载用户。",
     "empty": "没有匹配的用户。",
     "updateFailed": "修改用户失败。"
+  },
+  "Gallery": {
+    "backHome": "返回首页",
+    "eyebrow": "探索作品",
+    "title": "公开画廊",
+    "description": "创作者自愿分享的图像作品。打开图片可查看大图。",
+    "viewImage": "查看大图",
+    "empty": "还没有公开作品",
+    "emptyDescription": "从工作台公开的作品会展示在这里。",
+    "unavailable": "画廊暂时无法加载",
+    "unavailableDescription": "请稍后重试。",
+    "nextPage": "下一页",
+    "firstPage": "返回第一页"
   }
 }

@@ -1,6 +1,6 @@
 {
   "Metadata": {
-    "title": "Image Studio",
+    "title": "Moloom · AI Image Studio",
     "description": "구독형 AI 이미지 생성.",
     "generateTitle": "생성 · Image Studio",
     "pricingTitle": "요금 · Image Studio",
@@ -8,10 +8,11 @@
     "adminSettingsTitle": "관리자 설정 · Image Studio",
     "adminPlansTitle": "요금제 · Image Studio",
     "adminModelsTitle": "모델 · Image Studio",
-    "adminUsersTitle": "사용자 · Image Studio"
+    "adminUsersTitle": "사용자 · Image Studio",
+    "galleryTitle": "갤러리 · Moloom"
   },
   "Nav": {
-    "brand": "Image Studio",
+    "brand": "moloom",
     "generate": "생성",
     "account": "계정",
     "history": "기록",
@@ -19,13 +20,54 @@
     "getStarted": "무료로 시작",
     "language": "언어",
     "theme": "테마 전환",
-    "admin": "관리"
+    "admin": "관리",
+    "gallery": "갤러리",
+    "pricing": "요금"
   },
   "Home": {
     "title": "원하는 대로 이미지를 생성하세요",
     "subtitle": "모델을 고르고 원하는 이미지를 설명하면 몇 초 안에 결과를 받습니다. 월 구독으로 이용하고 부족하면 언제든 추가하세요.",
     "getStartedFree": "무료로 시작",
-    "signIn": "로그인"
+    "signIn": "로그인",
+    "eyebrow": "아이디어를 이미지로",
+    "heroLine1": "상상한 것을,",
+    "heroLine2": "눈앞의 이미지로.",
+    "heroDescription": "한 줄의 설명이나 참고 이미지로 창작을 시작하세요. 이미지 모델을 탐색하고 마음에 드는 작품을 만들어 공유할 수 있습니다.",
+    "continueCreating": "계속 만들기",
+    "exploreGallery": "갤러리 둘러보기",
+    "heroFootnote": "현재 제공되는 모델로 만들고, 공개 여부는 직접 선택하세요.",
+    "heroVisualLabel": "창작 이미지 쇼케이스",
+    "communityCreation": "커뮤니티가 만든 작품",
+    "yourCanvas": "여기서 시작하는 캔버스",
+    "visualTag": "이미지 스튜디오",
+    "galleryEyebrow": "커뮤니티 갤러리",
+    "galleryTitle": "아이디어가 작품이 되는 곳",
+    "galleryDescription": "제작자가 공개하기로 선택한 작품입니다. 다음 작품을 위한 영감을 찾아보세요.",
+    "viewAllGallery": "전체 작품 보기",
+    "viewImage": "이미지 열기",
+    "galleryEmpty": "첫 번째 작품을 기다리고 있어요",
+    "galleryEmptyDescription": "스튜디오에서 저장하고 공개한 이미지가 여기에 표시됩니다.",
+    "galleryUnavailable": "갤러리를 불러올 수 없습니다",
+    "galleryUnavailableDescription": "잠시 후 다시 시도해 주세요. 스튜디오는 계속 이용할 수 있습니다.",
+    "modelsEyebrow": "모델 스튜디오",
+    "modelsTitle": "표현에 맞는 모델",
+    "modelsDescription": "지원 예정인 이미지 모델 시리즈를 살펴보세요. 실제 이용 가능 여부는 현재 모델 목록에 따릅니다.",
+    "modelDescription": {
+      "flux": "빛과 질감을 섬세하게 표현하는 이미지 모델.",
+      "grok": "새로운 시각으로 인상적인 이미지를 만듭니다.",
+      "gpt": "일상의 아이디어를 위한 이미지 생성과 편집."
+    },
+    "available": "사용 가능",
+    "comingSoon": "지원 예정",
+    "availabilityUnknown": "스튜디오에서 확인",
+    "availableModels": "사용 가능한 모델 {count}개",
+    "modelAvailabilityNote": "활성화된 모델만 이미지 생성에 사용할 수 있습니다. 다른 시리즈는 출시 후 표시됩니다.",
+    "finalEyebrow": "다음 아이디어",
+    "finalTitleGuest": "나만의 작품을 만들어 볼까요?",
+    "finalTitleSignedIn": "다음 이미지는 당신의 아이디어에서 시작됩니다.",
+    "finalDescriptionGuest": "계정을 만들고 사용 가능한 모델을 선택해 이미지를 만들어 보세요.",
+    "finalDescriptionSignedIn": "스튜디오로 돌아가 다음 작품을 만들거나 공유해 보세요.",
+    "visualFallback": "상상 · 창작 · 공유"
   },
   "Error": {
     "title": "문제가 발생했습니다",
@@ -281,5 +323,18 @@
     "loadFailed": "사용자를 불러오지 못했습니다.",
     "empty": "일치하는 사용자가 없습니다.",
     "updateFailed": "사용자를 업데이트하지 못했습니다."
+  },
+  "Gallery": {
+    "backHome": "홈으로",
+    "eyebrow": "작품 탐색",
+    "title": "공개 갤러리",
+    "description": "제작자가 공유하기로 선택한 이미지입니다. 이미지를 열어 원본 크기로 볼 수 있습니다.",
+    "viewImage": "이미지 열기",
+    "empty": "아직 공개된 작품이 없습니다",
+    "emptyDescription": "스튜디오에서 공개한 이미지가 여기에 표시됩니다.",
+    "unavailable": "갤러리를 불러올 수 없습니다",
+    "unavailableDescription": "잠시 후 다시 시도해 주세요.",
+    "nextPage": "다음 페이지",
+    "firstPage": "첫 페이지로"
   }
 }

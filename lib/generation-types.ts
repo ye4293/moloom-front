@@ -90,6 +90,17 @@ export type GenerationPage = {
   nextCursor: string | null;
 };
 
+/** Public gallery payload. It intentionally omits reference images and user data. */
+export type GalleryImage = Pick<
+  GenerationBase,
+  "id" | "model" | "prompt" | "aspectRatio" | "createdAt"
+> & { imageUrl: string };
+
+export type GalleryPage = {
+  images: GalleryImage[];
+  nextCursor: string | null;
+};
+
 /**
  * 一个可订阅的档位，字段与后端 `GET /api/v1/plans` 的 `planResponse` 一一对应
  * （`internal/handler/plans.go`）。

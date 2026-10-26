@@ -3,6 +3,7 @@ import type {
   CreditBalance,
   Generation,
   GenerationPage,
+  GalleryPage,
   ImageModel,
   Plan,
   Subscription,
@@ -305,6 +306,15 @@ export function listGenerations(
     headers: { authorization: `Bearer ${token}` },
     cache: "no-store",
   });
+}
+
+/** Public, paginated, durable images chosen by their owners for the gallery. */
+export function listGallery(opts: { cursor?: string; limit?: number } = {}): Promise<Result<GalleryPage>> {
+  const params = new URLSearchParams();
+  if (opts.cursor) params.set("cursor", opts.cursor);
+  if (opts.limit !== undefined) params.set("limit", String(opts.limit));
+  const qs = params.toString();
+  return request<GalleryPage>(`/gallery${qs ? `?${qs}` : ""}`, { cache: "no-store" });
 }
 
 // ---------------------------------------------------------------------------

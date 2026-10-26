@@ -131,6 +131,7 @@ export function ParamPanel({
             type="button"
             disabled={pending}
             aria-pressed={isPublic}
+            aria-label={isPublic ? t("visibilityPublic") : t("visibilityPrivate")}
             title={isPublic ? t("visibilityPublic") : t("visibilityPrivate")}
             onClick={() => onIsPublicChange(!isPublic)}
             className="rounded-md border border-input px-2 py-1.5 text-sm"
@@ -138,6 +139,9 @@ export function ParamPanel({
             {isPublic ? "🔓" : "🔒"}
           </button>
         </div>
+        <p className="text-xs text-muted-foreground" aria-live="polite">
+          {isPublic ? t("visibilityPublic") : t("visibilityPrivate")}
+        </p>
       </div>
     </form>
   );

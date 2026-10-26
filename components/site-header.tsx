@@ -28,7 +28,7 @@ export async function SiteHeader() {
 
   const t = await getTranslations("Nav");
   return (
-    <header className="border-b">
+    <header className="relative z-10 border-b bg-background/95">
       {/*
         手机（375px）上顶栏刻意**换成两行**，而不是硬塞进一行。
 
@@ -44,11 +44,14 @@ export async function SiteHeader() {
         桌面端（≥640px）一行装得下，`flex-wrap` 不生效，布局与改动前一致——
         e2e 里"登出后顶栏 Sign in 链接可见"那条断言跑在 1280×720，不受影响。
       */}
-      <nav className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-2 px-4 py-3 sm:py-4">
-        <Link href="/" className="shrink-0 whitespace-nowrap font-semibold">
+      <nav className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-2 px-5 py-3 sm:px-8 sm:py-4">
+        <Link href="/" className="shrink-0 whitespace-nowrap text-lg font-bold tracking-[-.06em]">
           {t("brand")}
         </Link>
         <div className="flex flex-wrap items-center justify-end gap-2">
+          <Link href="/gallery" className={buttonVariants({ variant: "ghost" })}>
+            {t("gallery")}
+          </Link>
           {signedIn ? (
             <>
               <CreditBadge />
@@ -69,6 +72,9 @@ export async function SiteHeader() {
             </>
           ) : (
             <>
+              <Link href="/pricing" className={buttonVariants({ variant: "ghost" })}>
+                {t("pricing")}
+              </Link>
               <Link href="/login" className={buttonVariants({ variant: "ghost" })}>
                 {t("signIn")}
               </Link>

@@ -1,6 +1,6 @@
 {
   "Metadata": {
-    "title": "Image Studio",
+    "title": "Moloom · AI Image Studio",
     "description": "AI image generation, by subscription.",
     "generateTitle": "Generate · Image Studio",
     "pricingTitle": "Pricing · Image Studio",
@@ -8,10 +8,11 @@
     "adminSettingsTitle": "Admin Settings · Image Studio",
     "adminPlansTitle": "Plans · Image Studio",
     "adminModelsTitle": "Models · Image Studio",
-    "adminUsersTitle": "Users · Image Studio"
+    "adminUsersTitle": "Users · Image Studio",
+    "galleryTitle": "Gallery · Moloom"
   },
   "Nav": {
-    "brand": "Image Studio",
+    "brand": "moloom",
     "generate": "Generate",
     "account": "Account",
     "history": "History",
@@ -19,13 +20,54 @@
     "getStarted": "Get started",
     "language": "Language",
     "theme": "Toggle theme",
-    "admin": "Admin"
+    "admin": "Admin",
+    "gallery": "Gallery",
+    "pricing": "Pricing"
   },
   "Home": {
     "title": "Generate images your way",
     "subtitle": "Pick a model, describe what you want, and get results in seconds. Subscribe monthly or top up whenever you need more.",
     "getStartedFree": "Get started free",
-    "signIn": "Sign in"
+    "signIn": "Sign in",
+    "eyebrow": "A NEW SPACE FOR IDEAS",
+    "heroLine1": "Imagine it.",
+    "heroLine2": "Make it visible.",
+    "heroDescription": "Turn a line of text or a reference image into something worth keeping. Explore image models, create in your own style, and share what you love.",
+    "continueCreating": "Continue creating",
+    "exploreGallery": "Explore the gallery",
+    "heroFootnote": "Create with the models available in your studio. Publish only when you choose.",
+    "heroVisualLabel": "Creative image showcase",
+    "communityCreation": "Made by the community",
+    "yourCanvas": "Your canvas starts here",
+    "visualTag": "IMAGE STUDIO",
+    "galleryEyebrow": "COMMUNITY GALLERY",
+    "galleryTitle": "Ideas made visible",
+    "galleryDescription": "A collection of images their creators chose to share. Find a spark for your next creation.",
+    "viewAllGallery": "View all images",
+    "viewImage": "Open image",
+    "galleryEmpty": "The gallery is waiting for its first image",
+    "galleryEmptyDescription": "Publish a saved creation from the studio and it will appear here.",
+    "galleryUnavailable": "The gallery is temporarily unavailable",
+    "galleryUnavailableDescription": "Please try again later. You can still open the studio.",
+    "modelsEyebrow": "MODEL STUDIO",
+    "modelsTitle": "A model for every direction",
+    "modelsDescription": "Explore the image model families on our roadmap. Availability follows the live model catalog.",
+    "modelDescription": {
+      "flux": "Detailed images with expressive light and texture.",
+      "grok": "A different creative perspective for striking visuals.",
+      "gpt": "Versatile image creation and editing for everyday ideas."
+    },
+    "available": "Available now",
+    "comingSoon": "Planned",
+    "availabilityUnknown": "Check in studio",
+    "availableModels": "{count} model(s) available",
+    "modelAvailabilityNote": "Only enabled models are available for generation. Planned families will appear here when launched.",
+    "finalEyebrow": "YOUR NEXT IDEA",
+    "finalTitleGuest": "Ready to make something of your own?",
+    "finalTitleSignedIn": "Your next image starts with an idea.",
+    "finalDescriptionGuest": "Create an account, choose an available model, and start making images.",
+    "finalDescriptionSignedIn": "Head back to your studio to create or publish your next image.",
+    "visualFallback": "Imagine · Create · Share"
   },
   "Error": {
     "title": "Something went wrong",
@@ -281,5 +323,18 @@
     "loadFailed": "Could not load users.",
     "empty": "No users match.",
     "updateFailed": "Could not update the user."
+  },
+  "Gallery": {
+    "backHome": "Back to home",
+    "eyebrow": "EXPLORE",
+    "title": "Community gallery",
+    "description": "Images shared by their creators. Open an image to see it in full size.",
+    "viewImage": "Open image",
+    "empty": "No public images yet",
+    "emptyDescription": "Images published from the studio will appear here.",
+    "unavailable": "Gallery unavailable",
+    "unavailableDescription": "The gallery could not be loaded. Please try again later.",
+    "nextPage": "Next page",
+    "firstPage": "Back to first page"
   }
 }
